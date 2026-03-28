@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useRef } from "react";
+import axios from "axios";
+
+const API_BASE_URL = "http://localhost:5000";
 
 const DragDrop = ({ setResult, setLoading }) => {
+  const fileInputRef = useRef(null);
+
   const handleFile = async (file) => {
     if (!file || file.type !== "application/pdf") {
       alert("Please upload a PDF file");
@@ -12,16 +17,18 @@ const DragDrop = ({ setResult, setLoading }) => {
 
     try {
       setLoading(true);
+      setResult(null);
 
-      const res = await fetch("http://localhost:5000/upload", {
-        method: "POST",
-        body: formData,
+      const { data } = await axios.post(`${API_BASE_URL}/upload`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
-
-      const data = await res.json();
       setResult(data);
     } catch (err) {
-      alert("Error processing file");
+      const errorMessage =
+        err.response?.data?.error || "Error processing file";
+      alert(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -32,14 +39,44 @@ const DragDrop = ({ setResult, setLoading }) => {
     handleFile(e.dataTransfer.files[0]);
   };
 
+  const handleBrowse = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleChange = (e) => {
+    handleFile(e.target.files?.[0]);
+    e.target.value = "";
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      handleBrowse();
+    }
+  };
+
   return (
-    <div
-      className="drop-zone"
-      onDrop={handleDrop}
-      onDragOver={(e) => e.preventDefault()}
-    >
-      <p>Drag & Drop PDF here</p>
-    </div>
+    <>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="application/pdf"
+        onChange={handleChange}
+        style={{ display: "none" }}
+      />
+
+      <div
+        className="drop-zone"
+        onClick={handleBrowse}
+        onDrop={handleDrop}
+        onDragOver={(e) => e.preventDefault()}
+        onKeyDown={handleKeyDown}
+        role="button"
+        tabIndex={0}
+      >
+        <p>Drag & Drop PDF here or click to browse</p>
+      </div>
+    </>
   );
 };
 

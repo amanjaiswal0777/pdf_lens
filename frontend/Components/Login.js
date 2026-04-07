@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-const FAKE_TOKEN = "123456";
+import "./style.css";
 
 const GOOGLE_ICON = (
   <svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -41,33 +40,63 @@ function FieldInput({ label, type, value, onChange, placeholder, onFocus, onBlur
   );
 }
 
-const Login = () => {
+const Login = ({ setToken }) => {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ username: "", password: "" });
+  const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handle = (field) => (e) => setForm({ ...form, [field]: e.target.value });
+  const handle = (field) => (e) => {
+    setForm({ ...form, [field]: e.target.value });
+    setError("");
+  };
 
-  const signIn = () => {
-    window.localStorage.setItem("authToken", FAKE_TOKEN);
+  const signIn = (token) => {
+    window.sessionStorage.setItem("token", token);
+    setToken(token);
     navigate("/");
   };
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setTimeout(() => {
+
+    if (!form.email || !form.password) {
+      setError("Please enter both email and password.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError("");
+
+      const res = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email: form.email, password: form.password })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.msg || data.error || "Login failed.");
+      }
+
+      signIn(data.token);
+    } catch (err) {
+      setError(err.message || "Login failed.");
+    } finally {
       setLoading(false);
-      signIn();
-    }, 1800);
+    }
   };
 
   const googleLogin = () => {
     setGoogleLoading(true);
     setTimeout(() => {
       setGoogleLoading(false);
-      signIn();
+      setError("Google sign-in is not configured yet.");
     }, 1600);
   };
 
@@ -103,11 +132,11 @@ const Login = () => {
         <form className="form" onSubmit={submit}>
           <div className="field-row">
             <FieldInput
-              label="Username"
-              type="text"
-              value={form.username}
-              onChange={handle("username")}
-              placeholder="your_username"
+              label="Email"
+              type="email"
+              value={form.email}
+              onChange={handle("email")}
+              placeholder="your_email@example.com"
               onFocus={(e) => e.target.classList.add("field-input--focused")}
               onBlur={(e) => e.target.classList.remove("field-input--focused")}
             />
@@ -130,6 +159,8 @@ const Login = () => {
               Forgot password?
             </button>
           </div>
+
+          {error && <p className="error-msg">{error}</p>}
 
           <button className="btn-primary" type="submit" disabled={loading}>
             {loading && <span className="spinner" />}

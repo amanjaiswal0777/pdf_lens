@@ -2,9 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./style.css";
 
-const FAKE_TOKEN = "123456";
-
-/* ── Google Icon SVG ──────────────────────────────────────── */
 const GOOGLE_ICON = (
   <svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M47.532 24.552c0-1.636-.132-3.196-.38-4.692H24.48v9.01h13.012c-.576 3.016-2.272 5.572-4.832 7.288v6.048h7.82c4.572-4.212 7.052-10.42 7.052-17.654z" fill="#4285F4" />
@@ -14,7 +11,6 @@ const GOOGLE_ICON = (
   </svg>
 );
 
-/* ── DocLens Logo Icon SVG ────────────────────────────────── */
 const LOGO_ICON = (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
     <path
@@ -27,7 +23,6 @@ const LOGO_ICON = (
   </svg>
 );
 
-/* ── FieldInput Component ─────────────────────────────────── */
 function FieldInput({ label, type, value, onChange, placeholder }) {
   return (
     <div className="field-row">
@@ -43,8 +38,7 @@ function FieldInput({ label, type, value, onChange, placeholder }) {
   );
 }
 
-/* ── SignUp Component ─────────────────────────────────────── */
-export default function SignUp() {
+export default function SignUp({ setToken }) {
   const navigate = useNavigate();
   const [form, setForm] = useState({
     email: "",
@@ -61,75 +55,94 @@ export default function SignUp() {
     setError("");
   };
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
+
+    if (!form.email || !form.username || !form.password || !form.confirmPassword) {
+      setError("Please fill in all fields.");
+      return;
+    }
+
     if (form.password !== form.confirmPassword) {
       setError("Passwords do not match.");
       return;
     }
+
     if (form.password.length < 6) {
       setError("Password must be at least 6 characters.");
       return;
     }
-    setLoading(true);
-    setTimeout(() => {
-      window.localStorage.setItem("authToken", FAKE_TOKEN);
-      setLoading(false);
+
+    try {
+      setLoading(true);
+      setError("");
+
+      const res = await fetch("http://localhost:5000/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: form.username,
+          email: form.email,
+          password: form.password,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.msg || "Signup failed");
+      }
+      
+      window.sessionStorage.setItem("token", data.token);
+      setToken(data.token);
       navigate("/");
-    }, 1800);
+
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const googleSignUp = () => {
     setGoogleLoading(true);
     setTimeout(() => {
-      window.localStorage.setItem("authToken", FAKE_TOKEN);
       setGoogleLoading(false);
-      navigate("/");
+      setError("Google sign-in is not configured yet.");
     }, 1600);
   };
 
   return (
     <div className="page-wrapper">
-
-      {/* Background orbs */}
       <div className="orb orb--purple" />
       <div className="orb orb--blue" />
       <div className="orb orb--violet" />
-
-      {/* Grid overlay */}
       <div className="grid-overlay" />
 
-      {/* Card */}
       <div className="card">
-
-        {/* Logo */}
         <div className="logo">
           <div className="logo__icon">{LOGO_ICON}</div>
           <span className="logo__name">PDF_Lens</span>
         </div>
 
-        {/* Heading */}
         <div className="heading-block">
           <h1>Create account</h1>
-          <p>Get started — it's free.</p>
+          <p>Get started. It's free.</p>
         </div>
 
-        {/* Google sign up */}
         <button className="btn-google" onClick={googleSignUp} disabled={googleLoading}>
           {googleLoading ? <span className="spinner" /> : GOOGLE_ICON}
-          {googleLoading ? "Connecting…" : "Continue with Google"}
+          {googleLoading ? "Connecting..." : "Continue with Google"}
         </button>
 
-        {/* Divider */}
         <div className="divider">
           <div className="divider__line" />
           <span className="divider__label">OR</span>
           <div className="divider__line" />
         </div>
 
-        {/* Form */}
         <form className="form" onSubmit={submit}>
-
           <FieldInput
             label="Email"
             type="email"
@@ -151,7 +164,7 @@ export default function SignUp() {
             type="password"
             value={form.password}
             onChange={handle("password")}
-            placeholder="••••••••"
+            placeholder="........"
           />
 
           <FieldInput
@@ -159,20 +172,17 @@ export default function SignUp() {
             type="password"
             value={form.confirmPassword}
             onChange={handle("confirmPassword")}
-            placeholder="••••••••"
+            placeholder="........"
           />
 
-          {/* Inline error */}
           {error && <p className="error-msg">{error}</p>}
 
           <button className="btn-primary" type="submit" disabled={loading}>
             {loading && <span className="spinner" />}
-            {loading ? "Creating account…" : "Create account"}
+            {loading ? "Creating account..." : "Create account"}
           </button>
-
         </form>
 
-        {/* Switch to login */}
         <p className="toggle-row">
           Already have an account?{" "}
           <button
@@ -183,7 +193,6 @@ export default function SignUp() {
             Sign in
           </button>
         </p>
-
       </div>
     </div>
   );

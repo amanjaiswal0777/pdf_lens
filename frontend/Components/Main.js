@@ -15,13 +15,14 @@ const LOGO_ICON = (
   </svg>
 );
 
-const Main = () => {
+const Main = ({ setToken }) => {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    window.localStorage.removeItem("authToken");
+    window.sessionStorage.removeItem("token");
+    setToken(null);
     navigate("/login");
   };
 

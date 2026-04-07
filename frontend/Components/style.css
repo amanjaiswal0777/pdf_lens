@@ -1,16 +1,29 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Playfair+Display:wght@700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap");
 
-/* ── Reset ──────────────────────────────────────────────── */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-/* ── Base ───────────────────────────────────────────────── */
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
 body {
-  font-family: 'DM Sans', sans-serif;
+  margin: 0;
+  font-family: "DM Sans", sans-serif;
   background: #0a0a0f;
+  color: #e8e8f0;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
 }
 
 ::placeholder {
@@ -22,7 +35,6 @@ input:-webkit-autofill {
   -webkit-text-fill-color: #e8e8f0 !important;
 }
 
-/* ── Page wrapper ───────────────────────────────────────── */
 .page-wrapper {
   min-height: 100vh;
   display: flex;
@@ -30,9 +42,9 @@ input:-webkit-autofill {
   justify-content: center;
   position: relative;
   overflow: hidden;
+  padding: 24px;
 }
 
-/* ── Background orbs ────────────────────────────────────── */
 .orb {
   position: absolute;
   border-radius: 50%;
@@ -65,7 +77,6 @@ input:-webkit-autofill {
   right: 5%;
 }
 
-/* ── Grid overlay ───────────────────────────────────────── */
 .grid-overlay {
   position: absolute;
   inset: 0;
@@ -76,23 +87,21 @@ input:-webkit-autofill {
   background-size: 48px 48px;
 }
 
-/* ── Card ───────────────────────────────────────────────── */
 .card {
   width: 100%;
   max-width: 420px;
   margin: 24px;
-  background: rgba(14, 14, 22, 0.82);
-  backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 24px;
   padding: 44px 40px 40px;
-  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(108, 77, 255, 0.08);
   position: relative;
   z-index: 1;
+  background: rgba(14, 14, 22, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 24px;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(108, 77, 255, 0.08);
+  backdrop-filter: blur(24px);
   animation: fadeUp 0.55s cubic-bezier(0.22, 0.68, 0, 1.2) both;
 }
 
-/* ── Logo ───────────────────────────────────────────────── */
 .logo {
   display: flex;
   align-items: center;
@@ -103,60 +112,57 @@ input:-webkit-autofill {
 .logo__icon {
   width: 36px;
   height: 36px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #6c4dff, #a855f7);
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #6c4dff, #a855f7);
   box-shadow: 0 4px 16px rgba(108, 77, 255, 0.5);
 }
 
 .logo__name {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: 18px;
-  color: #e8e8f0;
   font-weight: 700;
+  color: #e8e8f0;
   letter-spacing: -0.3px;
 }
 
-/* ── Heading block ──────────────────────────────────────── */
 .heading-block {
   margin-bottom: 28px;
 }
 
 .heading-block h1 {
-  font-family: 'Playfair Display', serif;
+  margin-bottom: 6px;
+  font-family: "Playfair Display", serif;
   font-size: 26px;
   font-weight: 700;
   color: #f0f0fa;
   letter-spacing: -0.5px;
-  margin-bottom: 6px;
 }
 
 .heading-block p {
   font-size: 14px;
-  color: #6b6b8a;
   line-height: 1.5;
+  color: #6b6b8a;
 }
 
-/* ── Google button ──────────────────────────────────────── */
 .btn-google {
   width: 100%;
+  margin-bottom: 20px;
   padding: 11px 16px;
-  background: #13131f;
-  border: 1px solid #2a2a3e;
-  border-radius: 12px;
-  color: #d0d0e8;
-  font-size: 14px;
-  font-weight: 500;
-  font-family: inherit;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
+  border: 1px solid #2a2a3e;
+  border-radius: 12px;
+  background: #13131f;
+  color: #d0d0e8;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
-  margin-bottom: 20px;
 }
 
 .btn-google:hover:not(:disabled) {
@@ -164,7 +170,6 @@ input:-webkit-autofill {
   border-color: #3a3a55;
 }
 
-/* ── Divider ────────────────────────────────────────────── */
 .divider {
   display: flex;
   align-items: center;
@@ -180,28 +185,36 @@ input:-webkit-autofill {
 
 .divider__label {
   font-size: 12px;
-  color: #3a3a55;
   letter-spacing: 0.5px;
+  color: #3a3a55;
 }
 
-/* ── Form ───────────────────────────────────────────────── */
 .form {
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
 
-/* ── Field row (animated) ───────────────────────────────── */
 .field-row {
   animation: fadeUp 0.55s cubic-bezier(0.22, 0.68, 0, 1.2) both;
 }
 
-.field-row:nth-child(1) { animation-delay: 0.08s; }
-.field-row:nth-child(2) { animation-delay: 0.15s; }
-.field-row:nth-child(3) { animation-delay: 0.22s; }
-.field-row:nth-child(4) { animation-delay: 0.28s; }
+.field-row:nth-child(1) {
+  animation-delay: 0.08s;
+}
 
-/* ── Field label & input ────────────────────────────────── */
+.field-row:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.field-row:nth-child(3) {
+  animation-delay: 0.22s;
+}
+
+.field-row:nth-child(4) {
+  animation-delay: 0.28s;
+}
+
 .field-label {
   display: block;
   margin-bottom: 6px;
@@ -214,12 +227,11 @@ input:-webkit-autofill {
 .field-input {
   width: 100%;
   padding: 11px 14px;
-  background: #13131f;
   border: 1.5px solid #1e1e30;
   border-radius: 10px;
+  background: #13131f;
   color: #e8e8f0;
   font-size: 14px;
-  font-family: inherit;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
@@ -230,31 +242,28 @@ input:-webkit-autofill {
   box-shadow: 0 0 0 3px rgba(108, 77, 255, 0.18);
 }
 
-/* ── Forgot password ────────────────────────────────────── */
 .forgot-wrap {
   text-align: right;
   margin-top: -4px;
 }
 
-/* ── Primary button ─────────────────────────────────────── */
 .btn-primary {
-  margin-top: 6px;
   width: 100%;
+  margin-top: 6px;
   padding: 13px;
-  background: linear-gradient(135deg, #6c4dff, #9333ea);
-  border: none;
-  border-radius: 12px;
-  color: #fff;
-  font-size: 15px;
-  font-weight: 600;
-  font-family: inherit;
-  cursor: pointer;
-  transition: all 0.22s;
-  box-shadow: 0 4px 20px rgba(108, 77, 255, 0.35);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #6c4dff, #9333ea);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.22s;
+  box-shadow: 0 4px 20px rgba(108, 77, 255, 0.35);
 }
 
 .btn-primary:hover:not(:disabled) {
@@ -272,55 +281,58 @@ input:-webkit-autofill {
   cursor: not-allowed;
 }
 
-/* ── Link / ghost buttons ───────────────────────────────── */
 .link-btn {
-  background: none;
   border: none;
-  font-family: inherit;
+  background: none;
   cursor: pointer;
   transition: color 0.2s;
 }
 
 .link-btn--muted {
-  color: #6b6b8a;
   font-size: 13px;
+  color: #6b6b8a;
 }
 
 .link-btn--accent {
-  color: #8b5cf6;
-  font-weight: 600;
   font-size: 14px;
+  font-weight: 600;
+  color: #8b5cf6;
 }
 
 .link-btn:hover {
   color: #a78bfa;
 }
 
-/* ── Toggle row ─────────────────────────────────────────── */
 .toggle-row {
-  text-align: center;
   margin-top: 24px;
+  text-align: center;
   font-size: 14px;
   color: #6b6b8a;
 }
 
-/* ── Spinner ────────────────────────────────────────────── */
+.error-msg {
+  margin-top: -2px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #fda4af;
+}
+
 .spinner {
   width: 18px;
   height: 18px;
+  display: inline-block;
   border: 2px solid rgba(255, 255, 255, 0.25);
   border-top-color: #fff;
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
-  display: inline-block;
 }
 
-/* ── Keyframes ──────────────────────────────────────────── */
 @keyframes fadeUp {
   from {
     opacity: 0;
     transform: translateY(24px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -356,18 +368,18 @@ input:-webkit-autofill {
 .drop-zone {
   width: 100%;
   min-height: 190px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  color: #d8d8ee;
   border: 1.5px dashed rgba(139, 92, 246, 0.45);
   border-radius: 18px;
   background:
     linear-gradient(180deg, rgba(108, 77, 255, 0.08), rgba(19, 19, 31, 0.82)),
     #13131f;
-  color: #d8d8ee;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 24px;
-  cursor: pointer;
   transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 
@@ -379,8 +391,8 @@ input:-webkit-autofill {
 
 .drop-zone p {
   font-size: 15px;
-  color: #b8b8d3;
   line-height: 1.6;
+  color: #b8b8d3;
 }
 
 .main-status {
@@ -388,24 +400,24 @@ input:-webkit-autofill {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #b8b8d3;
   font-size: 14px;
+  color: #b8b8d3;
 }
 
 .main-result {
   margin-top: 24px;
   padding: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 18px;
   background: rgba(19, 19, 31, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.06);
   animation: fadeUp 0.55s cubic-bezier(0.22, 0.68, 0, 1.2) both;
 }
 
 .main-result h2 {
-  font-family: 'Playfair Display', serif;
+  margin-bottom: 10px;
+  font-family: "Playfair Display", serif;
   font-size: 20px;
   color: #f0f0fa;
-  margin-bottom: 10px;
 }
 
 .main-result h2:not(:first-child) {
@@ -413,9 +425,9 @@ input:-webkit-autofill {
 }
 
 .main-result p {
-  color: #b8b8d3;
-  line-height: 1.7;
   font-size: 14px;
+  line-height: 1.7;
+  color: #b8b8d3;
 }
 
 .keywords {
@@ -426,9 +438,9 @@ input:-webkit-autofill {
 
 .keywords span {
   padding: 8px 12px;
+  border: 1px solid rgba(139, 92, 246, 0.28);
   border-radius: 999px;
   background: rgba(108, 77, 255, 0.16);
-  border: 1px solid rgba(139, 92, 246, 0.28);
   color: #e8e8f0;
   font-size: 13px;
   font-weight: 500;
@@ -436,15 +448,16 @@ input:-webkit-autofill {
 
 @media (max-width: 640px) {
   .card {
+    margin: 0;
     padding: 32px 22px 28px;
-  }
-
-  .main-card__topbar {
-    align-items: flex-start;
-    flex-direction: column;
   }
 
   .main-card {
     max-width: 100%;
+  }
+
+  .main-card__topbar {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

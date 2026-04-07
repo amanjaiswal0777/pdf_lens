@@ -18,16 +18,18 @@ const DragDrop = ({ setResult, setLoading }) => {
     try {
       setLoading(true);
       setResult(null);
+      const token = window.sessionStorage.getItem("token");
 
-      const { data } = await axios.post(`${API_BASE_URL}/upload`, formData, {
+      const { data } = await axios.post(`${API_BASE_URL}/api/upload`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
         },
       });
       setResult(data);
     } catch (err) {
-      const errorMessage =
-        err.response?.data?.error || "Error processing file";
+      const backendMessage = err.response?.data?.error;
+      const errorMessage = backendMessage || "Error processing file";
       alert(errorMessage);
     } finally {
       setLoading(false);

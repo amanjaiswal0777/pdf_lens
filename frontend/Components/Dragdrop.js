@@ -1,7 +1,6 @@
 import React, { useRef } from "react";
 import axios from "axios";
-
-const API_BASE_URL = "https://pdf-lens.onrender.com";
+import API_BASE_URL from "./api";
 
 const DragDrop = ({ setResult, setLoading }) => {
   const fileInputRef = useRef(null);
@@ -19,6 +18,11 @@ const DragDrop = ({ setResult, setLoading }) => {
       setLoading(true);
       setResult(null);
       const token = window.sessionStorage.getItem("token");
+
+      if (!token) {
+        alert("Please log in again.");
+        return;
+      }
 
       const { data } = await axios.post(`${API_BASE_URL}/api/upload`, formData, {
         headers: {

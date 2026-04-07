@@ -22,6 +22,8 @@ const Main = ({ setToken }) => {
 
   const handleLogout = () => {
     window.sessionStorage.removeItem("token");
+    window.localStorage.removeItem("token");
+    window.localStorage.removeItem("authToken");
     setToken(null);
     navigate("/login");
   };

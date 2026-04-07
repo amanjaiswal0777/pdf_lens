@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import API_BASE_URL, { readJsonResponse } from "./api";
 import "./style.css";
 
 const GOOGLE_ICON = (
@@ -77,7 +78,7 @@ export default function SignUp({ setToken }) {
       setLoading(true);
       setError("");
 
-      const res = await fetch("https://pdf-lens.onrender.com/api/auth/signup", {
+      const res = await fetch(`${API_BASE_URL}/api/auth/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -89,9 +90,9 @@ export default function SignUp({ setToken }) {
         }),
       });
 
-      const data = await res.json();
+      const data = await readJsonResponse(res);
       if (!res.ok) {
-        throw new Error(data.msg || "Signup failed");
+        throw new Error(data.msg || data.error || "Signup failed");
       }
       
       window.sessionStorage.setItem("token", data.token);
@@ -99,7 +100,7 @@ export default function SignUp({ setToken }) {
       navigate("/");
 
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Signup failed.");
     } finally {
       setLoading(false);
     }

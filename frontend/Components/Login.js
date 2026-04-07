@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./style.css";
 
+const FAKE_TOKEN = "123456";
+
 const GOOGLE_ICON = (
   <svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M47.532 24.552c0-1.636-.132-3.196-.38-4.692H24.48v9.01h13.012c-.576 3.016-2.272 5.572-4.832 7.288v6.048h7.82c4.572-4.212 7.052-10.42 7.052-17.654z" fill="#4285F4" />
@@ -40,7 +42,7 @@ function FieldInput({ label, type, value, onChange, placeholder, onFocus, onBlur
   );
 }
 
-const Login = ({ setToken }) => {
+const Login = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
@@ -52,9 +54,8 @@ const Login = ({ setToken }) => {
     setError("");
   };
 
-  const signIn = (token) => {
-    window.sessionStorage.setItem("token", token);
-    setToken(token);
+  const signIn = () => {
+    window.localStorage.setItem("authToken", FAKE_TOKEN);
     navigate("/");
   };
 
@@ -70,7 +71,7 @@ const Login = ({ setToken }) => {
       setLoading(true);
       setError("");
 
-      const res = await fetch("http://localhost:5000/api/auth/login", {
+      const res = await fetch("https://pdf-lens.onrender.com/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -81,10 +82,16 @@ const Login = ({ setToken }) => {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.msg || data.error || "Login failed.");
+        throw new Error(data.msg || "Login failed");
       }
 
-      signIn(data.token);
+      // save token
+      localStorage.setItem("token", data.token);
+
+      // update state → redirect to app
+      setToken(data.token);
+
+      signIn();
     } catch (err) {
       setError(err.message || "Login failed.");
     } finally {
@@ -96,7 +103,7 @@ const Login = ({ setToken }) => {
     setGoogleLoading(true);
     setTimeout(() => {
       setGoogleLoading(false);
-      setError("Google sign-in is not configured yet.");
+      signIn();
     }, 1600);
   };
 
